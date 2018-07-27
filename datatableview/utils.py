@@ -12,7 +12,8 @@ try:
     from django.db.models.related import RelatedObject
     USE_RELATED_OBJECT = True
 except ImportError:
-    from django.db.models.fields.related import RelatedField
+    from django.db.models.fields.related import RelatedField, OneToOneField
+
     USE_RELATED_OBJECT = False
 
 from .compat import get_field
@@ -88,7 +89,7 @@ def get_model_at_related_field(model, attr):
     except FieldDoesNotExist:
         raise
 
-    if not direct:
+    if not direct or isinstance(field, OneToOneField):
         if hasattr(field, 'related_model'):  # Reverse relationship
             # -- Django >=1.8 mode
             return field.related_model

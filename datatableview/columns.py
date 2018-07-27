@@ -58,6 +58,8 @@ def get_column_for_modelfield(model_field):
     # climb the 'pk' field chain until we have something real.
     while model_field.rel:
         model_field = model_field.rel.to._meta.pk
+    if hasattr(model_field, 'model'):
+        model_field = model_field.model._meta.pk
     for ColumnClass, modelfield_classes in COLUMN_CLASSES:
         if isinstance(model_field, tuple(modelfield_classes)):
             return ColumnClass
