@@ -97,6 +97,9 @@ def get_model_at_related_field(model, attr):
             # -- Django <1.8 mode
             return field.model
 
+    if hasattr(field, 'related_model') and field.related_model:  # Forward/m2m relationship
+        return field.related_model
+
     if hasattr(field, 'rel') and field.rel:  # Forward/m2m relationship
         return field.rel.to
 
