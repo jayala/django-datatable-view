@@ -89,16 +89,12 @@ def get_model_at_related_field(model, attr):
     except FieldDoesNotExist:
         raise
 
-    if not direct or isinstance(field, OneToOneField):
-        if hasattr(field, 'related_model'):  # Reverse relationship
-            # -- Django >=1.8 mode
-            return field.related_model
-        elif hasattr(field, "model"):
-            # -- Django <1.8 mode
-            return field.model
-
-    if hasattr(field, 'related_model') and field.related_model:  # Forward/m2m relationship
+    if hasattr(field, 'related_model'):  # Reverse relationship
+        # -- Django >=1.8 mode
         return field.related_model
+    elif hasattr(field, "model"):
+        # -- Django <1.8 mode
+        return field.model
 
     if hasattr(field, 'rel') and field.rel:  # Forward/m2m relationship
         return field.rel.to
