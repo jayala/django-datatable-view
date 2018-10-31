@@ -102,7 +102,9 @@ class DatatableMixin(DatatableJSONResponseMixin, MultipleObjectMixin):
                 if columns[i].processor:
                     val = getattr(self._datatable, columns[i].processor)(row, self._datatable)
                 else:
-                    val = getattr(row, columns[i].name)
+                    val = row
+                    for attr in columns[i].sources[0].split('__'):
+                        val = getattr(val, attr)
                 worksheet.write(r, i, val)
             r += 1
 
