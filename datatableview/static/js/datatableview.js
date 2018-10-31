@@ -81,6 +81,19 @@ var datatableview = (function(){
                 return infoString;
             }
         });
+
+        if (Object.keys($.fn.dataTable.ext.buttons).length > 0) {
+            options = $.extend({}, options, {
+                dom: 'Bfrtip',
+                "buttons": [{
+                    text: 'Exportar',
+                    action: function (e, dt, node, config) {
+                        window.location = datatable.attr('data-source-url') + '?' + $.param($.extend({}, dt.ajax.params(), {'export': 1, 'ajax': true}));
+                    }
+                }]
+            });
+        }
+
         options.ajax = $.extend(options.ajax, {
             "url": datatable.attr('data-source-url'),
             "type": datatable.attr('data-ajax-method') || 'GET',

@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-
+import io
 import json
 import logging
 
@@ -8,6 +8,7 @@ from django.views.generic.list import MultipleObjectMixin
 from django.http import HttpResponse
 from django.conf import settings
 from django.core.serializers.json import DjangoJSONEncoder
+from xlsxwriter import Workbook
 
 from ..datatables import Datatable, DatatableOptions
 from ..compat import escape_uri_path
@@ -75,9 +76,50 @@ class DatatableMixin(DatatableJSONResponseMixin, MultipleObjectMixin):
     datatable_class = None
     context_datatable_name = 'datatable'
 
+    def export(self):
+        output = io.BytesIO()
+        workbook = Workbook(output, {'in_memory': True})
+        worksheet = workbook.add_worksheet()
+        # bold = workbook.add_format({'bold': True})
+
+        columns = []
+        for i in range(len(self._datatable.columns)):
+            field = list(self._datatable.columns.keys())[i]
+            if not self._datatable.columns[field].export:
+                continue
+            columns.append(self._datatable.columns[field])
+
+        for i in range(len(columns)):
+            if not columns[i].export:
+                continue
+            worksheet.write(0, i, columns[i].label)
+
+        r = 1
+        for row in self._datatable.search(self.get_queryset()):
+            for i in range(len(columns)):
+                if not columns[i].export:
+                    continue
+                if columns[i].processor:
+                    val = getattr(self._datatable, columns[i].processor)(row, self._datatable)
+                else:
+                    val = getattr(row, columns[i].name)
+                worksheet.write(r, i, val)
+            r += 1
+
+        workbook.close()
+        output.seek(0)
+        content_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        response = HttpResponse(output.read(), content_type=content_type)
+        response['Content-Disposition'] = "attachment; filename=data.xlsx"
+
+        return response
+
     # AJAX response handler
     def get_ajax(self, request, *args, **kwargs):
         """ Called when accessed via AJAX on the request method specified by the Datatable. """
+
+        if request.GET.get('export'):
+            return self.export()
 
         response_data = self.get_json_response_object(self._datatable)
         response = HttpResponse(self.serialize_to_json(response_data),
