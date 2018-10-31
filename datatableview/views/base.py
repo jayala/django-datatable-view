@@ -3,6 +3,7 @@ import io
 import json
 import logging
 
+from datatableview import DisplayColumn
 from django.views.generic import ListView, TemplateView
 from django.views.generic.list import MultipleObjectMixin
 from django.http import HttpResponse
@@ -85,9 +86,10 @@ class DatatableMixin(DatatableJSONResponseMixin, MultipleObjectMixin):
         columns = []
         for i in range(len(self._datatable.columns)):
             field = list(self._datatable.columns.keys())[i]
-            if not self._datatable.columns[field].export:
+            col = self._datatable.columns[field]
+            if not col.export or isinstance(col, DisplayColumn):
                 continue
-            columns.append(self._datatable.columns[field])
+            columns.append(col)
 
         for i in range(len(columns)):
             if not columns[i].export:
@@ -104,7 +106,10 @@ class DatatableMixin(DatatableJSONResponseMixin, MultipleObjectMixin):
                 else:
                     val = row
                     for attr in columns[i].sources[0].split('__'):
-                        val = getattr(val, attr)
+                        try:
+                            val = getattr(val, attr)
+                        except:
+                            val = ''
                 worksheet.write(r, i, val)
             r += 1
 
