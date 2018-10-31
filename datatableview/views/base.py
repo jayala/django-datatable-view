@@ -110,6 +110,7 @@ class DatatableMixin(DatatableJSONResponseMixin, MultipleObjectMixin):
                             val = getattr(val, attr)
                         except:
                             val = ''
+                    val = str(val)
                 worksheet.write(r, i, val)
             r += 1
 
