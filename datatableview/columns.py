@@ -92,6 +92,7 @@ class ColumnMetaclass(type):
 class Column(six.with_metaclass(ColumnMetaclass)):
     """ Generic table column using CharField for rendering. """
 
+    export = True
     model_field_class = None
     handles_field_classes = []
 
@@ -103,9 +104,11 @@ class Column(six.with_metaclass(ColumnMetaclass)):
     def __init__(self, label=None, sources=None, processor=None, source=None,
                  separator=DEFAULT_MULTIPLE_SEPARATOR, empty_value=DEFAULT_EMPTY_VALUE,
                  model_field_class=None, sortable=True, visible=True, localize=False,
-                 allow_regex=False, allow_full_text_search=False):
+                 allow_regex=False, allow_full_text_search=False, export = True):
         if model_field_class:
             self.model_field_class = model_field_class
+
+        self.export = export
 
         if source and sources:
             raise ValueError("Cannot provide 'source' and 'sources' at the same time.")
