@@ -1,0 +1,18 @@
+{% extends "easy_pdf/base.html" %}
+{% block content %}
+  <table style="border: #0A0A0A 1px solid;table-layout: fixed; margin: 0">
+    <tr>
+      {% for cabeceras in cabecera %}
+        <td style="text-align:center;padding: 2px;word-wrap:break-word; background-color: #ff9900">
+          <h3>{{ cabeceras|title }}</h3></td>
+      {% endfor %}
+    </tr>
+    {% for dato in datos %}
+      <tr>
+        {% for lista in dato %}
+          <td style="padding: 2px;word-wrap:break-word"> {{ lista }} </td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+  </table>
+{% endblock %}

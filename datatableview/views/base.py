@@ -2,6 +2,7 @@
 import io
 import json
 import logging
+from itertools import islice
 
 from datatableview import DisplayColumn
 from django.views.generic import ListView, TemplateView
@@ -9,9 +10,10 @@ from django.views.generic.list import MultipleObjectMixin
 from django.http import HttpResponse
 from django.conf import settings
 from django.core.serializers.json import DjangoJSONEncoder
+from easy_pdf.rendering import render_to_pdf, make_response
 from xlsxwriter import Workbook
 
-from ..datatables import Datatable, DatatableOptions
+from ..datatables import Datatable
 from ..compat import escape_uri_path
 
 log = logging.getLogger(__name__)
@@ -122,12 +124,54 @@ class DatatableMixin(DatatableJSONResponseMixin, MultipleObjectMixin):
 
         return response
 
+    def pdf(self, response):
+
+        columns = []
+        for i in range(len(self._datatable.columns)):
+            field = list(self._datatable.columns.keys())[i]
+            col = self._datatable.columns[field]
+            if not col.export or isinstance(col, DisplayColumn):
+                continue
+            columns.append(col)
+
+        cabecera = []
+        for i in range(len(columns)):
+            if not columns[i].export:
+                continue
+            cabecera.append(columns[i].label)
+
+        datos = []
+
+        r = 0
+        for row in self._datatable.search(self.get_queryset()):
+            d = []
+            for i in range(len(columns)):
+                if not columns[i].export:
+                    continue
+                if columns[i].processor:
+                    val = getattr(self._datatable, columns[i].processor)(row, self._datatable)
+                else:
+                    val = row
+                    for attr in columns[i].sources[0].split('__'):
+                        try:
+                            val = getattr(val, attr)
+                        except:
+                            val = ''
+                    val = str(val)
+                d.append(val)
+            r += 1
+            datos.append(d)
+        pdf = render_to_pdf('datatableview/pdf.html', {'cabecera': cabecera, 'datos': datos},  encoding="utf-8")
+        return make_response(pdf, 'data.pdf')
+
     # AJAX response handler
     def get_ajax(self, request, *args, **kwargs):
         """ Called when accessed via AJAX on the request method specified by the Datatable. """
-
-        if request.GET.get('export'):
+        exportacion = request.GET.get('export')
+        if exportacion == 'xlsx':
             return self.export()
+        if exportacion == 'pdf':
+            return self.pdf(self.get_json_response_object(self._datatable))
 
         response_data = self.get_json_response_object(self._datatable)
         response = HttpResponse(self.serialize_to_json(response_data),
