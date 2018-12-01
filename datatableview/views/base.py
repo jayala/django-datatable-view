@@ -2,7 +2,6 @@
 import io
 import json
 import logging
-from itertools import islice
 
 from datatableview import DisplayColumn
 from django.views.generic import ListView, TemplateView
@@ -124,7 +123,7 @@ class DatatableMixin(DatatableJSONResponseMixin, MultipleObjectMixin):
 
         return response
 
-    def pdf(self, response):
+    def pdf(self):
 
         columns = []
         for i in range(len(self._datatable.columns)):
@@ -171,7 +170,7 @@ class DatatableMixin(DatatableJSONResponseMixin, MultipleObjectMixin):
         if exportacion == 'xlsx':
             return self.export()
         if exportacion == 'pdf':
-            return self.pdf(self.get_json_response_object(self._datatable))
+            return self.pdf()
 
         response_data = self.get_json_response_object(self._datatable)
         response = HttpResponse(self.serialize_to_json(response_data),
