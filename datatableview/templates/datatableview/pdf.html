@@ -1,5 +1,10 @@
+
 {% extends "easy_pdf/base.html" %}
+{% load staticfiles %}
 {% block content %}
+
+  <div><img src="{{ url }}{{ logo }}"  width="300px" style="margin-bottom: 50px"></div>
+  <br/>
   <table style="border: #0A0A0A 1px solid;table-layout: fixed; margin: 0">
     <tr>
       {% for cabeceras in cabecera %}

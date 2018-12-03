@@ -12,6 +12,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from easy_pdf.rendering import render_to_pdf, make_response
 from xlsxwriter import Workbook
 
+from puntobox.settings import LOGO_URL_DATATABLE, MEDIA_ROOT
 from ..datatables import Datatable
 from ..compat import escape_uri_path
 
@@ -123,7 +124,7 @@ class DatatableMixin(DatatableJSONResponseMixin, MultipleObjectMixin):
 
         return response
 
-    def pdf(self):
+    def pdf_g(self):
 
         columns = []
         for i in range(len(self._datatable.columns)):
@@ -160,7 +161,14 @@ class DatatableMixin(DatatableJSONResponseMixin, MultipleObjectMixin):
                 d.append(val)
             r += 1
             datos.append(d)
-        pdf = render_to_pdf('datatableview/pdf.html', {'cabecera': cabecera, 'datos': datos},  encoding="utf-8")
+        logo_url = LOGO_URL_DATATABLE
+        static_url = MEDIA_ROOT
+        pdf = render_to_pdf('datatableview/pdf.html', {
+            'cabecera': cabecera,
+            'datos': datos,
+            'logo': logo_url,
+            'url': static_url
+        })
         return make_response(pdf, 'data.pdf')
 
     # AJAX response handler
@@ -169,8 +177,8 @@ class DatatableMixin(DatatableJSONResponseMixin, MultipleObjectMixin):
         exportacion = request.GET.get('export')
         if exportacion == 'xlsx':
             return self.export()
-        if exportacion == 'pdf':
-            return self.pdf()
+        if exportacion == 'pdf_e':
+            return self.pdf_g()
 
         response_data = self.get_json_response_object(self._datatable)
         response = HttpResponse(self.serialize_to_json(response_data),

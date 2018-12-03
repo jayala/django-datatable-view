@@ -100,7 +100,7 @@ var datatableview = (function () {
             text: 'PDF',
             action: function (e, dt, node, config) {
               window.location = datatable.attr('data-source-url') + '?' + $.param($.extend({}, dt.ajax.params(), {
-                'export': 'pdf',
+                'export': 'pdf_e',
                 'ajax': true
               }));
             },
