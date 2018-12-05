@@ -12,7 +12,6 @@ from django.core.serializers.json import DjangoJSONEncoder
 from easy_pdf.rendering import render_to_pdf, make_response
 from xlsxwriter import Workbook
 
-from puntobox.settings import LOGO_URL_DATATABLE, MEDIA_ROOT
 from ..datatables import Datatable
 from ..compat import escape_uri_path
 
@@ -161,8 +160,8 @@ class DatatableMixin(DatatableJSONResponseMixin, MultipleObjectMixin):
                 d.append(val)
             r += 1
             datos.append(d)
-        logo_url = LOGO_URL_DATATABLE if LOGO_URL_DATATABLE else ''
-        static_url = MEDIA_ROOT if MEDIA_ROOT else ''
+        logo_url = settings.LOGO_URL_DATATABLE if settings.LOGO_URL_DATATABLE else ''
+        static_url = settings.MEDIA_ROOT if settings.MEDIA_ROOT else ''
         pdf = render_to_pdf('datatableview/pdf.html', {
             'cabecera': cabecera,
             'datos': datos,
