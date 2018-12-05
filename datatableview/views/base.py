@@ -161,8 +161,8 @@ class DatatableMixin(DatatableJSONResponseMixin, MultipleObjectMixin):
                 d.append(val)
             r += 1
             datos.append(d)
-        logo_url = LOGO_URL_DATATABLE
-        static_url = MEDIA_ROOT
+        logo_url = LOGO_URL_DATATABLE if LOGO_URL_DATATABLE else ''
+        static_url = MEDIA_ROOT if MEDIA_ROOT else ''
         pdf = render_to_pdf('datatableview/pdf.html', {
             'cabecera': cabecera,
             'datos': datos,
