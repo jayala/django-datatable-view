@@ -4,6 +4,7 @@ import json
 import logging
 
 from datatableview import DisplayColumn
+from django.db import models
 from django.views.generic import ListView, TemplateView
 from django.views.generic.list import MultipleObjectMixin
 from django.http import HttpResponse
@@ -111,7 +112,10 @@ class DatatableMixin(DatatableJSONResponseMixin, MultipleObjectMixin):
                             val = getattr(val, attr)
                         except:
                             val = ''
+                if isinstance(val, models.Model):
                     val = str(val)
+                if val is None:
+                    val = ''
                 worksheet.write(r, i, val)
             r += 1
 
@@ -123,8 +127,7 @@ class DatatableMixin(DatatableJSONResponseMixin, MultipleObjectMixin):
 
         return response
 
-    def pdf_g(self):
-
+    def export_pdf(self):
         columns = []
         for i in range(len(self._datatable.columns)):
             field = list(self._datatable.columns.keys())[i]
@@ -156,7 +159,10 @@ class DatatableMixin(DatatableJSONResponseMixin, MultipleObjectMixin):
                             val = getattr(val, attr)
                         except:
                             val = ''
+                if isinstance(val, models.Model):
                     val = str(val)
+                if val is None:
+                    val = ''
                 d.append(val)
             r += 1
             datos.append(d)
@@ -183,7 +189,7 @@ class DatatableMixin(DatatableJSONResponseMixin, MultipleObjectMixin):
         if exportacion == 'xlsx':
             return self.export()
         if exportacion == 'pdf_e':
-            return self.pdf_g()
+            return self.export_pdf()
 
         response_data = self.get_json_response_object(self._datatable)
         response = HttpResponse(self.serialize_to_json(response_data),
