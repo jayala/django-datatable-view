@@ -96,7 +96,7 @@ class DatatableMixin(DatatableJSONResponseMixin, MultipleObjectMixin):
         for i in range(len(columns)):
             if not columns[i].export:
                 continue
-            worksheet.write(0, i, columns[i].label)
+            worksheet.write(0, i, str(columns[i].label))
 
         r = 1
         for row in self._datatable.search(self.get_queryset()):
@@ -116,7 +116,7 @@ class DatatableMixin(DatatableJSONResponseMixin, MultipleObjectMixin):
                     val = str(val)
                 if val is None:
                     val = ''
-                worksheet.write(r, i, val)
+                worksheet.write(r, i, str(val))
             r += 1
 
         workbook.close()
