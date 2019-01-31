@@ -70,6 +70,8 @@ var datatableview = (function () {
       sortingOptions[i] = sortingOptions[i].slice(1);
     }
 
+    var select_filters = datatable.attr('data-select-filters').split(',');
+
     options = $.extend({}, datatableview.defaults, opts, {
       "order": sortingOptions,
       "columns": columnOptions,
@@ -81,6 +83,34 @@ var datatableview = (function () {
           infoString += oSettings.oLanguage.sInfoFiltered.replace('_MAX_', iMax);
         }
         return infoString;
+      },
+      'initComplete': function () {
+        this.api().columns().every(function (colIndex) {
+          var column = this;
+          var columns = datatable.DataTable().settings().init().columns;
+          var column_name = columns[colIndex].name;
+
+          if (select_filters.indexOf(column_name) === -1)
+            return;
+
+          var select = $('<select><option value=""></option></select>')
+            .appendTo($(column.footer()).empty())
+            .on('change', function () {
+              var val = $(this).val();
+              console.log(val);
+              column
+                .search(val ? val : '', true, false)
+                .draw();
+            });
+
+          if (typeof jQuery().select2 !== 'undefined') {
+            select.select2();
+          }
+
+          column.data().unique().sort().each(function (d, j) {
+            select.append('<option value="' + d + '">' + d + '</option>')
+          });
+        });
       }
     });
 

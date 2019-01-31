@@ -122,6 +122,7 @@ class DatatableOptions(object):
     def __init__(self, options=None):
         # Non-mutable; server's declared preference is final
         self.id = getattr(options, 'id', '')
+        self.select_filters = getattr(options, 'select_filters', '')
         self.model = getattr(options, 'model', None)
         self.columns = getattr(options, 'columns', None)  # table headers
         self.exclude = getattr(options, 'exclude', None)

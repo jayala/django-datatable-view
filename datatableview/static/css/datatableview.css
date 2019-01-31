@@ -1,0 +1,6 @@
+.datatable .select2-container--default {
+width: 100% !important;
+}
+.datatable .select2-selection--single {
+height: 40px !important;
+}
