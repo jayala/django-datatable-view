@@ -6,7 +6,7 @@
     <thead>
         <tr>
             {% for column in columns %}
-            <th data-name="{{ column.label|slugify }}"{{ column.attributes|safe }}>{{ column.label }}</th>
+            <th data-name="{{ column.name }}"{{ column.attributes|safe }}>{{ column.label }}</th>
             {% endfor %}
         </tr>
     </thead>
