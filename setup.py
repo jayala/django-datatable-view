@@ -28,5 +28,5 @@ setup(name='git+https://github.com/jayala/django-datatable-view',
       packages=find_packages(exclude=['tests', 'tests.*']),
       package_data={'datatableview': ['static/js/*.js', 'templates/datatableview/*.html']},
       include_package_data=True,
-      install_requires=['django>=1.2', 'python-dateutil>=2.1'],
+      install_requires=['django>=1.2', 'python-dateutil>=2.1', 'XlsxWriter==1.1.2', 'django-easy-pdf==0.1.1'],
 )

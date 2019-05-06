@@ -2,3 +2,4 @@ django>=1.4
 python-dateutil>=2.1
 django-easy-pdf==0.1.1
 xhtml2pdf==0.2.3
+XlsxWriter==1.1.2
