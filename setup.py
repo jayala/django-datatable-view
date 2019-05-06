@@ -3,8 +3,8 @@
 
 from setuptools import setup, find_packages
 
-setup(name='django-datatable-view',
-      version='0.9.0-beta.5',
+setup(name='git+https://github.com/jayala/django-datatable-view',
+      version='1.0',
       description='This package is used in conjunction with the jQuery plugin '
                   '(http://http://datatables.net/), and supports state-saving detection'
                   ' with (http://datatables.net/plug-ins/api).  The package consists of '
@@ -12,8 +12,8 @@ setup(name='django-datatable-view',
                   ' table data from models.',
       author='Tim Valenta',
       author_email='tvalenta@pivotalenergysolutions.com',
-      url='https://github.com/pivotal-energy-solutions/django-datatable-view',
-      download_url='https://github.com/pivotal-energy-solutions/django-datatable-view/tarball/django-datatable-view-0.9.0-beta.5',
+      url='https://github.com/jayala/django-datatable-view',
+      download_url='git+https://github.com/jayala/django-datatable-view',
       license='Apache License (2.0)',
       classifiers=[
            'Development Status :: 2 - Pre-Alpha',
