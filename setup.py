@@ -3,7 +3,7 @@
 
 from setuptools import setup, find_packages
 
-setup(name='git+https://github.com/jayala/django-datatable-view',
+setup(name='django-datatable-view',
       version='1.0',
       description='This package is used in conjunction with the jQuery plugin '
                   '(http://http://datatables.net/), and supports state-saving detection'
@@ -13,7 +13,7 @@ setup(name='git+https://github.com/jayala/django-datatable-view',
       author='Tim Valenta',
       author_email='tvalenta@pivotalenergysolutions.com',
       url='https://github.com/jayala/django-datatable-view',
-      download_url='git+https://github.com/jayala/django-datatable-view',
+      download_url='',
       license='Apache License (2.0)',
       classifiers=[
            'Development Status :: 2 - Pre-Alpha',
@@ -29,4 +29,7 @@ setup(name='git+https://github.com/jayala/django-datatable-view',
       package_data={'datatableview': ['static/js/*.js', 'templates/datatableview/*.html']},
       include_package_data=True,
       install_requires=['django>=1.2', 'python-dateutil>=2.1', 'XlsxWriter==1.1.2', 'django-easy-pdf==0.1.1'],
+      dependency_links=[
+           'git+https://github.com/jayala/django-datatable-view',
+      ]
 )
