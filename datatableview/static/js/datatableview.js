@@ -115,8 +115,10 @@ var datatableview = (function () {
     });
 
     if (Object.keys($.fn.dataTable.ext.buttons).length > 0) {
+      if ((!options.dom || options.dom && options.dom.indexOf('B') === -1) && !options.disableButtons) {
+        options.dom = (options.dom ? 'B' + options.dom : 'Bfrtip');
+      }
       options = $.extend({}, options, {
-        dom: 'Bfrtip',
         "buttons": [{
           text: 'XLSX',
           action: function (e, dt, node, config) {
